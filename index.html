@@ -2,38 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- This meta tag is the most important part for Android compatibility -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ELITE PUSH | ORDER</title>
+    <title>ELITE PUSH BY NIKHIL | ORDER</title>
     <style>
         :root { --bg: #0f0c29; --accent: #9b59b6; --text: #fff; --glass: rgba(255, 255, 255, 0.08); }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; padding: 20px; margin: 0; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 450px; }
+        .panel { background: var(--glass); backdrop-filter: blur(10px); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        input, select { width: 100%; padding: 15px; margin: 10px 0; background: #000; border: 1px solid var(--accent); border-radius: 12px; color: white; font-size: 16px; box-sizing: border-box; }
+        button.action { width: 100%; padding: 15px; background: linear-gradient(to right, var(--accent), #6c5ce7); border: none; color: white; font-weight: bold; border-radius: 12px; margin-top: 10px; }
+        h1 { font-size: 1.4rem; color: #81ecec; text-align: center; margin-bottom: 20px; }
         
-        body { 
-            background: var(--bg); 
-            color: var(--text); 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            padding: 20px; 
-            margin: 0;
-            display: flex;
-            justify-content: center;
-        }
+        /* This box now appears directly inside the main panel */
+        .order-summary { background: #1a1a1a; padding: 15px; border-radius: 15px; border: 1px solid var(--accent); margin-top: 20px; text-align: center; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
 
-        .container { 
-            width: 100%; 
-            max-width: 450px; /* Keeps it looking great on big phones */
-        }
+<div class="container">
+    <div id="genSection" class="panel">
+        <h1>ORDER BUILDER</h1>
+        <select id="mode">
+            <option value="BR">BR (Top 10)</option>
+            <option value="CS">CS (Win/Star)</option>
+        </select>
+        <input type="number" id="count" placeholder="Matches (Max 50)" pattern="\d*">
+        <button class="action" onclick="generateOrder()">ADD TO CART</button>
+        
+        <div id="orderDisplay" class="order-summary hidden">
+            <h3 id="orderText" style="margin: 0 0 10px 0;"></h3>
+            <p style="font-size: 0.9rem; margin-bottom: 15px;">To complete your order, contact the owner.</p>
+            <a href="https://www.instagram.com/nikhillxd1233" style="text-decoration:none;">
+                <button class="action" style="background: #27ae60; margin: 0;">CONTACT OWNER TO BUY</button>
+            </a>
+        </div>
+    </div>
+</div>
 
-        .panel { 
-            background: var(--glass); 
-            backdrop-filter: blur(10px); 
-            padding: 25px; 
-            border-radius: 25px; 
-            border: 1px solid rgba(255,255,255,0.1); 
+<script>
+    function generateOrder() {
+        const c = document.getElementById('count').value;
+        const m = document.getElementById('mode').value;
+        
+        if(!c || c < 1 || c > 50) {
+            alert("Please enter a number between 1 and 50.");
+            return;
         }
-
-        input, select { 
-            width: 100%; 
-            padding: 16px; 
+        
+        const display = document.getElementById('orderDisplay');
+        const text = document.getElementById('orderText');
+        
+        text.innerText = `Order: ${c.padStart(3,'0')} ${m}`;
+        display.classList.remove('hidden');
+    }
+</script>
+</body>
+</html>
             margin: 12px 0; 
             background: #000; 
             border: 1px solid var(--accent); 
