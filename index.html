@@ -2,45 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ELITE PUSH | OFFICIAL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ELITE PUSH | OFFICIAL PORTAL</title>
     <style>
         :root { --bg: #0f0c29; --accent: #9b59b6; --text: #fff; --glass: rgba(255, 255, 255, 0.08); }
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; padding: 20px; display: flex; justify-content: center; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 20px; margin: 0; display: flex; justify-content: center; }
         .container { width: 100%; max-width: 450px; }
-        .panel { background: var(--glass); backdrop-filter: blur(10px); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
-        input, select { width: 100%; padding: 15px; margin: 10px 0; background: #000; border: 1px solid var(--accent); border-radius: 12px; color: white; font-size: 16px; box-sizing: border-box; }
-        button.action { width: 100%; padding: 15px; background: linear-gradient(to right, var(--accent), #6c5ce7); border: none; color: white; font-weight: bold; border-radius: 12px; margin-top: 10px; }
-        h1 { font-size: 1.4rem; color: #81ecec; text-align: center; }
-        .price-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 0.9rem; }
+        .panel { background: var(--glass); backdrop-filter: blur(15px); padding: 25px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { font-size: 1.5rem; color: #81ecec; text-align: center; margin-bottom: 20px; }
+        input, select { width: 100%; padding: 16px; margin: 10px 0; background: #000; border: 1px solid var(--accent); border-radius: 15px; color: white; font-size: 16px; box-sizing: border-box; }
+        button.action { width: 100%; padding: 18px; background: linear-gradient(to right, var(--accent), #6c5ce7); border: none; color: white; font-weight: bold; font-size: 16px; border-radius: 15px; margin-top: 10px; cursor: pointer; }
+        .price-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.95rem; }
+        #codeResult, #payResult { margin-top: 20px; padding: 15px; background: #000; border-radius: 15px; text-align: center; border: 1px dashed var(--accent); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- PRICING -->
+    <!-- PRICING SECTION -->
     <div class="panel">
-        <h1>PRICING</h1>
-        <div class="price-row"><span>1-10 Matches:</span> <span>₹4/each</span></div>
-        <div class="price-row"><span>11-20 Matches:</span> <span>₹5/each</span></div>
-        <div class="price-row"><span>21+ Matches:</span> <span>7% Discount!</span></div>
+        <h1>PRICING LIST</h1>
+        <div class="price-row"><span>1 - 10 Matches:</span> <span>₹4 / match</span></div>
+        <div class="price-row"><span>11 - 20 Matches:</span> <span>₹5 / match</span></div>
+        <div class="price-row"><span>21+ Matches:</span> <span>7% Discount Applied</span></div>
     </div>
 
     <!-- ORDER BUILDER -->
     <div class="panel">
         <h1>ORDER BUILDER</h1>
-        <select id="mode"><option value="BR">BR (Top 10)</option><option value="CS">CS (Win/Star)</option></select>
-        <input type="number" id="count" placeholder="Matches (Max 50)">
-        <button class="action" onclick="generateCode()">GENERATE CODE</button>
-        <div id="codeResult" style="margin-top:15px; text-align:center; font-weight:bold;"></div>
+        <select id="mode">
+            <option value="BR">Battle Royale (BR)</option>
+            <option value="CS">Clash Squad (CS)</option>
+        </select>
+        <input type="number" id="count" placeholder="Number of matches (1-50)" pattern="\d*">
+        <button class="action" onclick="generateCode()">GENERATE ORDER CODE</button>
+        <div id="codeResult">Generated Code will appear here</div>
     </div>
 
     <!-- PAYMENT PORTAL -->
     <div class="panel">
         <h1>PAYMENT PORTAL</h1>
-        <input type="text" id="espCode" placeholder="Enter ESP... (e.g. ESP030BR)">
+        <input type="text" id="espCode" placeholder="Paste ESP code (e.g., ESP030BR)">
         <button class="action" onclick="calculate()">VERIFY & CALCULATE</button>
-        <div id="payResult" style="margin-top:15px; text-align:center;"></div>
+        <div id="payResult">Result will appear here</div>
     </div>
 </div>
 
@@ -48,31 +52,31 @@
     function generateCode() {
         const c = document.getElementById('count').value;
         const m = document.getElementById('mode').value;
-        if(c > 50) return alert("Max 50 matches");
-        document.getElementById('codeResult').innerText = `Your Code: ESP${c.padStart(3,'0')}${m}`;
+        if(c < 1 || c > 50) return alert("Please enter between 1 and 50 matches.");
+        const code = `ESP${c.padStart(3,'0')}${m}`;
+        document.getElementById('codeResult').innerHTML = `Your Order Code:<br><strong style="color:var(--accent); font-size:1.2rem;">${code}</strong>`;
     }
 
     function calculate() {
         const input = document.getElementById('espCode').value.toUpperCase();
-        if(!input.startsWith("ESP")) return alert("Invalid Format");
-        
+        if(!input.startsWith("ESP")) return alert("Invalid Format! Use ESP format.");
         const count = parseInt(input.match(/\d+/)[0]);
         let total = 0;
-
-        // Pricing logic
+        
         if (count <= 10) {
             total = count * 4;
         } else if (count <= 20) {
             total = (10 * 4) + ((count - 10) * 5);
         } else {
-            // Price for first 20 + (Remaining * 5 * 0.93)
-            let base20 = (10 * 4) + (10 * 5);
-            total = base20 + ((count - 20) * 5 * 0.93);
+            // First 20: 10*4 + 10*5 = 90. Rest: 7% discount.
+            total = 90 + ((count - 20) * 5 * 0.93);
         }
-
+        
         document.getElementById('payResult').innerHTML = `
-            <h3>Payable: ₹${total.toFixed(0)}</h3>
-            <a href="https://www.instagram.com/nikhillxd1233"><button class="action" style="background:#27ae60">CONTACT TO PAY</button></a>
+            <h3>Final Amount: ₹${total.toFixed(0)}</h3>
+            <a href="https://www.instagram.com/nikhillxd1233" style="text-decoration:none;">
+                <button class="action" style="background:#27ae60;">CONTACT TO PAY</button>
+            </a>
         `;
     }
 </script>
